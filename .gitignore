@@ -1,0 +1,7 @@
+.DS_Store
+.venv/
+.venv-ppo/
+**/__pycache__/
+*.py[cod]
+experiments/weight_space_exp5/data/
+experiments/weight_space_exp5/results/
