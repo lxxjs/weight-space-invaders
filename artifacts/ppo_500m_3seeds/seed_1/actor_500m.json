@@ -1,0 +1,8 @@
+{
+  "game": "space_invaders",
+  "seed": 1,
+  "requested_steps": 500000000,
+  "actual_steps": 500006912,
+  "completed_updates": 61036,
+  "actor": "actor_500m.npz"
+}

@@ -4,7 +4,7 @@ An independent **MinAtar Space Invaders extension** inspired by Experiment 5 of 
 
 The original experiment asks a language model to write policy-network weights from scratch for **Breakout, Seaquest, and Asterix**. This repository adds **Space Invaders** using the same `600 → 32 → 32 → 6` network shape, builds an independent evaluation path, and trains its own PPO baselines for comparison. Space Invaders results in this repository are an **extension, not a reported result of the original authors**. The original [experiment logs, prompts, and weights](https://github.com/RikiyaT/lm_understand-logs/tree/main/exp5_write_from_scratch) remain in the authors' repository; `get_reference.sh` fetches a pinned revision for local verification.
 
-The implementation and conclusions here are independent of the original authors. See the [experiment guide](experiments/weight_space_exp5/README.md) for the protocol, limitations, and full commands. MinAtar is described in [Young and Tian, *MinAtar: An Atari-Inspired Testbed*](https://arxiv.org/abs/1903.03176).
+The implementation and conclusions here are independent of the original authors. See the [experiment guide](experiments/weight_space_exp5/README.md) for the protocol, limitations, and full commands, and the [PPO training and evaluation report](artifacts/ppo_500m_3seeds/README.md) for archived results. MinAtar is described in [Young and Tian, *MinAtar: An Atari-Inspired Testbed*](https://arxiv.org/abs/1903.03176).
 
 ## Contents
 
@@ -14,11 +14,16 @@ The implementation and conclusions here are independent of the original authors.
 | `prepare_space_invaders.py` | Build the new-game prompt from installed MinAtar 1.0.15 source |
 | `run_agent.py` | Run a single tool-free Codex weight-writing attempt |
 | `ppo_baseline.py` | PPO baseline and short CPU/GPU benchmarking |
+| `ppo_baseline_cpu.py` | Exact CPU trainer used for seed 0 and the early portions of seeds 1 and 2 |
 | `ppo_live_training.py` | CPU PPO baseline with real 64-game observation snapshots |
 | `run_ppo_overnight.sh` | Resume-capable, three-seed 500M-step training supervisor |
 | `watch_ppo.py` | Local browser viewer for actual training games and a separate policy demo |
 
-All files are under `experiments/weight_space_exp5/`. The PPO trainer saves full state every 500 updates and exports actor weights at the 100M and 500M milestones. Each update collects 64 environments × 128 steps. The 100M actor is a milestone within a 500M learning-rate schedule, not an independent 100M training run.
+The implementation files are under `experiments/weight_space_exp5/`; the curated run archive is under `artifacts/ppo_500m_3seeds/`. The PPO trainer saves full state every 500 updates and exports actor weights at the 100M and 500M milestones. Each update collects 64 environments × 128 steps. The 100M actor is a milestone within a 500M learning-rate schedule, not an independent 100M training run.
+
+## Completed PPO baseline
+
+Three training seeds each reached **500,006,912 environment steps**. We evaluated their 100M and 500M actor snapshots on 1,000 games each, using the same evaluation seeds. Mean score across the three training seeds was **466.636 ± 53.448 seed SE** at the 100M milestone and **1119.849 ± 33.774 seed SE** at 500M. The [archive](artifacts/ppo_500m_3seeds/README.md) includes every episode score, training logs, full per-update timing, actor weights, final resumable checkpoints, and a SHA-256 manifest. The one-shot Space Invaders weight-writing attempt has not yet run.
 
 ## Set up
 
@@ -54,4 +59,4 @@ Training continues from each seed's `latest.pt` if restarted. The supervisor run
 
 Open <http://127.0.0.1:8765/training>. The viewer samples the real training observations; it is not a complete recording of every game frame. The `/` page plays a separate demonstration game with the latest saved policy. The viewer currently offers seed 1 and seed 2; seed 0 was completed before live snapshots were added.
 
-For original-game verification, run `get_reference.sh` and follow the [experiment guide](experiments/weight_space_exp5/README.md). Generated prompts, upstream reference files, checkpoints, and results are intentionally excluded from Git. No completed Space Invaders weight-writing result is claimed here.
+For original-game verification, run `get_reference.sh` and follow the [experiment guide](experiments/weight_space_exp5/README.md). Generated prompts, upstream reference files, and scratch results are excluded from Git; the completed PPO baselines are published in the curated archive. No completed Space Invaders weight-writing result is claimed here.
